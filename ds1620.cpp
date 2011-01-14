@@ -10,7 +10,7 @@
 #define FLAG_1SHOT 0x01
 
 
-DS1620::DS1620(int rst, int clk, int dq)
+DS1620::DS1620(const int rst, const int clk, const int dq)
     : rst_pin_(rst),
       clk_pin_(clk),
       dq_pin_(dq)
@@ -94,7 +94,7 @@ word DS1620::read_data(const DataSize size)
 }
 
 
-void DS1620::write_data(word data, const DataSize size)
+void DS1620::write_data(const word data, const DataSize size)
 {
   // Always write out the lower byte.
   shiftOut(dq_pin_, clk_pin_, LSBFIRST, (data & 0xFF));
@@ -106,7 +106,7 @@ void DS1620::write_data(word data, const DataSize size)
 }
 
 
-void DS1620::write_command(Command command)
+void DS1620::write_command(const Command command)
 {
   start_transfer();
   write_data(command, eight_bits_);
@@ -114,7 +114,7 @@ void DS1620::write_command(Command command)
 }
 
 
-void DS1620::write_command_8bit(Command command, byte value)
+void DS1620::write_command_8bit(const Command command, const byte value)
 {
   start_transfer();
   write_data(command, eight_bits_);
