@@ -29,8 +29,6 @@ Ds1620::Ds1620(int rst, int clk, int dq)
   pinMode(rst, OUTPUT);
   pinMode(clk, OUTPUT);
   pinMode(dq, OUTPUT);
-
-  config();
 }
 
 

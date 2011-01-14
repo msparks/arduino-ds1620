@@ -26,6 +26,8 @@ void setup()
   Serial.begin(9600);
   delay(100);
 
+  ds1620.config();
+
   Serial.print("RST\r\n");
 }
 

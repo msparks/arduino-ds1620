@@ -16,6 +16,7 @@ class Ds1620
 {
  public:
   Ds1620(int rst, int clk, int dq);
+  void config();
 
   float temp_c();
 
@@ -42,8 +43,6 @@ class Ds1620
     write_config_ = 0x0C,
     read_config_  = 0xAC
   };
-
-  void config();
 
   void start_transfer();
   void end_transfer();
