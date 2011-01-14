@@ -5,7 +5,7 @@ Copyright (c) 2011, Matt Sparks
 All rights reserved.
 */
 #include <stdlib.h>
-#include "DS1620.h"
+#include <DS1620.h>
 
 
 // Set the appropriate digital I/O pin connections.
