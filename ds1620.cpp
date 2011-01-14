@@ -12,6 +12,15 @@
 #include "WProgram.h"
 #include "ds1620.h"
 
+// Configuration flag bitmasks.
+#define FLAG_DONE  0x80
+#define FLAG_THF   0x40
+#define FLAG_TLF   0x20
+#define FLAG_NVB   0x10
+#define FLAG_CPU   0x20
+#define FLAG_1SHOT 0x01
+
+
 Ds1620::Ds1620(int rst, int clk, int dq)
     : rst_pin_(rst),
       clk_pin_(clk),
@@ -25,7 +34,8 @@ Ds1620::Ds1620(int rst, int clk, int dq)
 void Ds1620::config()
 {
   // write configuration register in DS1620
-  write_command_8bit(write_config_, 0x03);
+  byte flags = FLAG_CPU | FLAG_1SHOT;
+  write_command_8bit(write_config_, flags);
   delay(200); //wait until the configuration register is written
 }
 
