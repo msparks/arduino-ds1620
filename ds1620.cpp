@@ -25,10 +25,7 @@ Ds1620::Ds1620(int rst, int clk, int dq)
 
 void Ds1620::config()
 {
-
   // write configuration register in DS1620
-  rst_low();
-  clk_high();
   write_command_8bit(0x0c, 0x03);
   delay(200); //wait until the configuration register is written
 }
@@ -37,21 +34,14 @@ void Ds1620::config()
 void Ds1620::start_conv()
 {
   // START_CONV
-  clk_high();
-  rst_high();
   write_command(0xEE); //start conversion
-  rst_low();
   delay(700);
 }
 
 void Ds1620::stop_conv()
 {
   // STOP_CONV
-  clk_high();
-  rst_high();
   write_command(0x22); //stop conversion
-  rst_low();
-  //delay(200);
 }
 
 void Ds1620::write_data(word data, const DataSize size)
@@ -68,11 +58,14 @@ void Ds1620::write_data(word data, const DataSize size)
 void Ds1620::write_command(uint8_t command)
 {
   clk_low();
+  rst_high();
   write_data(command, eight_bits_);
+  rst_low();
 }
 
 void Ds1620::write_command_8bit(uint8_t command, uint8_t value)
 {
+  clk_low();
   rst_high();
   write_data(command, eight_bits_);
   write_data(value, eight_bits_);
@@ -82,9 +75,9 @@ void Ds1620::write_command_8bit(uint8_t command, uint8_t value)
 int Ds1620::read_data()
 {
   //READ DATA
-  clk_high();
+  clk_low();
   rst_high();
-  write_command(0xAA);
+  write_data(0xAA, eight_bits_);
   int raw_data = read_raw_data();
   rst_low();
   return raw_data;
