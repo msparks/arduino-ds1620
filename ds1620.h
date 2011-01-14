@@ -73,8 +73,8 @@ class DS1620
   void start_conv();
   void stop_conv();
 
-  word read_data(const DataSize size);
-  void write_data(word data, const DataSize size);
+  word read_data(DataSize size);
+  void write_data(word data, DataSize size);
   void write_command(Command command);
   void write_command_8bit(Command command, byte value);
 };
