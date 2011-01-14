@@ -41,6 +41,24 @@ void Ds1620::config()
 }
 
 
+float Ds1620::temp_c()
+{
+  // Start temperature conversion.
+  start_conv();
+
+  // Read temperature.
+  start_transfer();
+  write_data(read_temp_, eight_bits_);
+  word raw_data = read_data(nine_bits_);
+  end_transfer();
+
+  // Stopping conversion is not necessary here while in 1-shot mode.
+
+  float temp_c = raw_data / 2.0;
+  return temp_c;
+}
+
+
 void Ds1620::start_conv()
 {
   write_command(start_conv_);
@@ -53,18 +71,6 @@ void Ds1620::start_conv()
 void Ds1620::stop_conv()
 {
   write_command(stop_conv_);
-}
-
-
-float Ds1620::temp_c()
-{
-  start_transfer();
-  write_data(read_temp_, eight_bits_);
-  word raw_data = read_data(nine_bits_);
-  end_transfer();
-
-  float temp_c = raw_data / 2.0;
-  return temp_c;
 }
 
 

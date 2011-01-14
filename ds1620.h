@@ -17,8 +17,6 @@ class Ds1620
  public:
   Ds1620(int rst, int clk, int dq);
   void config();
-  void start_conv();
-  void stop_conv();
 
   float temp_c();
 
@@ -48,6 +46,9 @@ class Ds1620
 
   void start_transfer();
   void end_transfer();
+
+  void start_conv();
+  void stop_conv();
 
   word read_data(const DataSize size);
   void write_data(word data, const DataSize size);
