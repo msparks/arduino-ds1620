@@ -28,6 +28,7 @@ class Ds1620
 
   int read_raw_data(void);
   void write_command(uint8_t command);
+  void write_command_8bit(uint8_t command, uint8_t value);
   void clk_high(void);
   void clk_low(void);
   void rst_high(void);

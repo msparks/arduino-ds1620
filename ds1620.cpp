@@ -29,10 +29,7 @@ void Ds1620::config()
   // write configuration register in DS1620
   rst_low();
   clk_high();
-  rst_high(); //all data transfer are initiated by driving RST high
-  write_command(0x0c); // write config command
-  write_command(0x03); // cpu mode + 1 SHOT
-  rst_low();
+  write_command_8bit(0x0c, 0x03);
   delay(200); //wait until the configuration register is written
 }
 
@@ -58,10 +55,17 @@ void Ds1620::stop_conv()
 }
 
 void Ds1620::write_command(uint8_t command)
-/* sends 8 bit command on DQ output, least sig bit first */
 {
   clk_low();
   shiftOut(dq_pin_, clk_pin_, LSBFIRST, command);
+}
+
+void Ds1620::write_command_8bit(uint8_t command, uint8_t value)
+{
+  rst_high();
+  shiftOut(dq_pin_, clk_pin_, LSBFIRST, command);
+  shiftOut(dq_pin_, clk_pin_, LSBFIRST, value);
+  rst_low();
 }
 
 int Ds1620::read_data()
