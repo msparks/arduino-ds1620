@@ -31,13 +31,27 @@ class Ds1620
     nine_bits_
   };
 
+  enum Command {
+    read_temp_    = 0xAA,
+    write_th_     = 0x01,
+    write_tl_     = 0x02,
+    read_th_      = 0xA1,
+    read_tl_      = 0xA2,
+    read_cnt_     = 0xA0,
+    read_slope_   = 0xA9,
+    start_conv_   = 0xEE,
+    stop_conv_    = 0x22,
+    write_config_ = 0x0C,
+    read_config_  = 0xAC
+  };
+
   void start_transfer();
   void end_transfer();
 
   int read_raw_data(void);
   void write_data(word data, const DataSize size);
-  void write_command(uint8_t command);
-  void write_command_8bit(uint8_t command, uint8_t value);
+  void write_command(Command command);
+  void write_command_8bit(Command command, uint8_t value);
 };
 
 #endif

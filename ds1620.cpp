@@ -12,7 +12,6 @@
 #include "WProgram.h"
 #include "ds1620.h"
 
-
 Ds1620::Ds1620(int rst, int clk, int dq)
     : rst_pin_(rst),
       clk_pin_(clk),
@@ -26,7 +25,7 @@ Ds1620::Ds1620(int rst, int clk, int dq)
 void Ds1620::config()
 {
   // write configuration register in DS1620
-  write_command_8bit(0x0c, 0x03);
+  write_command_8bit(write_config_, 0x03);
   delay(200); //wait until the configuration register is written
 }
 
@@ -34,14 +33,14 @@ void Ds1620::config()
 void Ds1620::start_conv()
 {
   // START_CONV
-  write_command(0xEE); //start conversion
+  write_command(start_conv_); //start conversion
   delay(700);
 }
 
 void Ds1620::stop_conv()
 {
   // STOP_CONV
-  write_command(0x22); //stop conversion
+  write_command(stop_conv_); //stop conversion
 }
 
 void Ds1620::write_data(word data, const DataSize size)
@@ -55,14 +54,14 @@ void Ds1620::write_data(word data, const DataSize size)
   }
 }
 
-void Ds1620::write_command(uint8_t command)
+void Ds1620::write_command(Command command)
 {
   start_transfer();
   write_data(command, eight_bits_);
   end_transfer();
 }
 
-void Ds1620::write_command_8bit(uint8_t command, uint8_t value)
+void Ds1620::write_command_8bit(Command command, uint8_t value)
 {
   start_transfer();
   write_data(command, eight_bits_);
@@ -74,7 +73,7 @@ int Ds1620::read_data()
 {
   //READ DATA
   start_transfer();
-  write_data(0xAA, eight_bits_);
+  write_data(read_temp_, eight_bits_);
   int raw_data = read_raw_data();
   end_transfer();
   return raw_data;
