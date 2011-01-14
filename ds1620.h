@@ -19,7 +19,8 @@ class Ds1620
   void config();
   void start_conv();
   void stop_conv();
-  int read_data();
+
+  float temp_c();
 
  private:
   const int rst_pin_;
@@ -48,7 +49,7 @@ class Ds1620
   void start_transfer();
   void end_transfer();
 
-  int read_raw_data(void);
+  word read_data(const DataSize size);
   void write_data(word data, const DataSize size);
   void write_command(Command command);
   void write_command_8bit(Command command, byte value);

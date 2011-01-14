@@ -56,6 +56,39 @@ void Ds1620::stop_conv()
 }
 
 
+float Ds1620::temp_c()
+{
+  start_transfer();
+  write_data(read_temp_, eight_bits_);
+  word raw_data = read_data(nine_bits_);
+  end_transfer();
+
+  float temp_c = raw_data / 2.0;
+  return temp_c;
+}
+
+
+word Ds1620::read_data(const DataSize size)
+{
+  byte bit = 0;
+  word data = 0;
+
+  pinMode(dq_pin_, INPUT);
+
+  const uint8_t bits = (size == eight_bits_) ? 8 : 9;
+  for (byte i = 0; i < bits; ++i) {
+    digitalWrite(clk_pin_, LOW);
+    bit = digitalRead(dq_pin_);
+    digitalWrite(clk_pin_, HIGH);
+
+    data |= (bit << i);
+  }
+
+  pinMode(dq_pin_, OUTPUT);
+  return data;
+}
+
+
 void Ds1620::write_data(word data, const DataSize size)
 {
   // Always write out the lower byte.
@@ -82,36 +115,6 @@ void Ds1620::write_command_8bit(Command command, byte value)
   write_data(command, eight_bits_);
   write_data(value, eight_bits_);
   end_transfer();
-}
-
-
-int Ds1620::read_data()
-{
-  start_transfer();
-  write_data(read_temp_, eight_bits_);
-  int raw_data = read_raw_data();
-  end_transfer();
-  return raw_data;
-}
-
-
-int Ds1620::read_raw_data(void)
-{
-  int bit,n;
-  int raw_data=0;
-
-  pinMode(dq_pin_, INPUT);
-
-  /* jam the dq lead high to use as input */
-  for(n=0;n<9;n++)
-  {
-     digitalWrite(clk_pin_, LOW);
-     bit=(digitalRead(dq_pin_));
-     digitalWrite(clk_pin_, HIGH);
-     raw_data = raw_data | (bit <<  n);
-  }
-  pinMode(dq_pin_, OUTPUT);
-  return(raw_data);
 }
 
 

@@ -44,12 +44,11 @@ void loop()
    ds1620.start_conv();
    
    // read the last temperature converson
-   int raw_data = ds1620.read_data();
-   
+   float temp = ds1620.temp_c();
    // stop conversion not really needed since we are in 
    // 1 shot mode
    ds1620.stop_conv();
-   float temp = raw_data / 2.0; 
+
    Serial.print((int)temp,DEC);
    Serial.print("\r\n");
 }
