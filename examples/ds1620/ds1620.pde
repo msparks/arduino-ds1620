@@ -28,15 +28,14 @@ void setup()
 
   ds1620.config();
 
-  Serial.print("RST\r\n");
+  Serial.println("RST");
 }
 
 
 void loop()
 {
-   // read the last temperature converson
-   float temp = ds1620.temp_c();
+  // read the last temperature converson
+  float temp = ds1620.temp_c();
 
-   Serial.print((int)temp,DEC);
-   Serial.print("\r\n");
+  Serial.println(temp, 1);
 }
