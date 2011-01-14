@@ -54,17 +54,28 @@ void Ds1620::stop_conv()
   //delay(200);
 }
 
+void Ds1620::write_data(word data, const DataSize size)
+{
+  // Always write out the lower byte.
+  shiftOut(dq_pin_, clk_pin_, LSBFIRST, (data & 0xFF));
+
+  if (size == nine_bits_) {
+    // Write out upper byte.
+    shiftOut(dq_pin_, clk_pin_, LSBFIRST, ((data & 0xFF00) >> 8));
+  }
+}
+
 void Ds1620::write_command(uint8_t command)
 {
   clk_low();
-  shiftOut(dq_pin_, clk_pin_, LSBFIRST, command);
+  write_data(command, eight_bits_);
 }
 
 void Ds1620::write_command_8bit(uint8_t command, uint8_t value)
 {
   rst_high();
-  shiftOut(dq_pin_, clk_pin_, LSBFIRST, command);
-  shiftOut(dq_pin_, clk_pin_, LSBFIRST, value);
+  write_data(command, eight_bits_);
+  write_data(value, eight_bits_);
   rst_low();
 }
 
