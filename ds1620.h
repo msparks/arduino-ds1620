@@ -51,7 +51,7 @@ class Ds1620
   int read_raw_data(void);
   void write_data(word data, const DataSize size);
   void write_command(Command command);
-  void write_command_8bit(Command command, uint8_t value);
+  void write_command_8bit(Command command, byte value);
 };
 
 #endif

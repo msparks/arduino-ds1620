@@ -76,7 +76,7 @@ void Ds1620::write_command(Command command)
 }
 
 
-void Ds1620::write_command_8bit(Command command, uint8_t value)
+void Ds1620::write_command_8bit(Command command, byte value)
 {
   start_transfer();
   write_data(command, eight_bits_);
