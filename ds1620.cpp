@@ -57,7 +57,7 @@ void Ds1620::stop_conv()
   //delay(200);
 }
 
-void Ds1620::write_command(int command)
+void Ds1620::write_command(uint8_t command)
 /* sends 8 bit command on DQ output, least sig bit first */
 {
   clk_low();

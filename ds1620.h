@@ -27,7 +27,7 @@ class Ds1620
   const int dq_pin_;
 
   int read_raw_data(void);
-  void write_command(int command);
+  void write_command(uint8_t command);
   void clk_high(void);
   void clk_low(void);
   void rst_high(void);
