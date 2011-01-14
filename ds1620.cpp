@@ -39,7 +39,10 @@ void Ds1620::config()
   // Write configuration register in DS1620.
   byte flags = FLAG_CPU | FLAG_1SHOT;
   write_command_8bit(write_config_, flags);
-  delay(200);
+
+  // E^2 memory has a small write delay. According to the datasheet, this is
+  // around 10ms at room temperature.
+  delay(50);
 }
 
 
