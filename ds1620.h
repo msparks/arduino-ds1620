@@ -31,7 +31,9 @@ SUCH DAMAGE.
 #ifndef DS1620_h
 #define DS1620_h
 
+#include <math.h>
 #include <WConstants.h>
+
 
 class DS1620
 {
