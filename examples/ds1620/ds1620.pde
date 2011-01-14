@@ -1,25 +1,11 @@
-/*
-  DS160 Library
-
-  by Ruben Laguna 2009 <ruben.laguna at gmail.com>
-  based on examples from Tom Tigoe <http://www.arduino.cc/en/Reference/SoftwareSerialExample>
-  and phanderson <http://www.phanderson.com/printer/ds1620/ds1620.html>
-*/
-
-#define ledPin 13
-
 #include <stdlib.h>
 #include <math.h>
-//#include <Stdio.h>
-
-
-
-#include "ds1620.h"
+#include "DS1620.h"
 
 
 // set up ds1620
 // this sets the pins as outputs
-Ds1620 ds1620 = Ds1620(7/*rst*/,8/*clk*/,9/*dq*/);
+DS1620 ds1620 = DS1620(7/*rst*/,8/*clk*/,9/*dq*/);
 
 void setup()
 {

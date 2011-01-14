@@ -1,16 +1,5 @@
-/*
-  DS160 Library
-
-  by Ruben Laguna 2009 <ruben.laguna at gmail.com>
-
-  based on examples from Tom Tigoe <http://www.arduino.cc/en/Reference/SoftwareSerialExample>
-  and phanderson <http://www.phanderson.com/printer/ds1620/ds1620.html>
-
-  written: 30 Aug 2008
-*/
-
 #include "WProgram.h"
-#include "ds1620.h"
+#include "DS1620.h"
 
 // Configuration flag bitmasks.
 #define FLAG_DONE  0x80
@@ -21,7 +10,7 @@
 #define FLAG_1SHOT 0x01
 
 
-Ds1620::Ds1620(int rst, int clk, int dq)
+DS1620::DS1620(int rst, int clk, int dq)
     : rst_pin_(rst),
       clk_pin_(clk),
       dq_pin_(dq)
@@ -32,7 +21,7 @@ Ds1620::Ds1620(int rst, int clk, int dq)
 }
 
 
-void Ds1620::config()
+void DS1620::config()
 {
   // Write configuration register in DS1620.
   byte flags = FLAG_CPU | FLAG_1SHOT;
@@ -44,7 +33,7 @@ void Ds1620::config()
 }
 
 
-float Ds1620::temp_c()
+float DS1620::temp_c()
 {
   // Start temperature conversion.
   start_conv();
@@ -69,7 +58,7 @@ float Ds1620::temp_c()
 }
 
 
-void Ds1620::start_conv()
+void DS1620::start_conv()
 {
   write_command(start_conv_);
 
@@ -78,13 +67,13 @@ void Ds1620::start_conv()
 }
 
 
-void Ds1620::stop_conv()
+void DS1620::stop_conv()
 {
   write_command(stop_conv_);
 }
 
 
-word Ds1620::read_data(const DataSize size)
+word DS1620::read_data(const DataSize size)
 {
   byte bit = 0;
   word data = 0;
@@ -105,7 +94,7 @@ word Ds1620::read_data(const DataSize size)
 }
 
 
-void Ds1620::write_data(word data, const DataSize size)
+void DS1620::write_data(word data, const DataSize size)
 {
   // Always write out the lower byte.
   shiftOut(dq_pin_, clk_pin_, LSBFIRST, (data & 0xFF));
@@ -117,7 +106,7 @@ void Ds1620::write_data(word data, const DataSize size)
 }
 
 
-void Ds1620::write_command(Command command)
+void DS1620::write_command(Command command)
 {
   start_transfer();
   write_data(command, eight_bits_);
@@ -125,7 +114,7 @@ void Ds1620::write_command(Command command)
 }
 
 
-void Ds1620::write_command_8bit(Command command, byte value)
+void DS1620::write_command_8bit(Command command, byte value)
 {
   start_transfer();
   write_data(command, eight_bits_);
@@ -134,14 +123,14 @@ void Ds1620::write_command_8bit(Command command, byte value)
 }
 
 
-void Ds1620::start_transfer()
+void DS1620::start_transfer()
 {
   digitalWrite(clk_pin_, LOW);
   digitalWrite(rst_pin_, HIGH);
 }
 
 
-void Ds1620::end_transfer()
+void DS1620::end_transfer()
 {
   digitalWrite(rst_pin_, LOW);
 }
