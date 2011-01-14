@@ -38,9 +38,27 @@ SUCH DAMAGE.
 class DS1620
 {
  public:
+  /**
+   * Interface with a DS1620 chip.
+   *
+   * Args:
+   *   rst: RST pin number
+   *   clk: CLK pin number
+   *   dq: DQ pin number
+   */
   DS1620(int rst, int clk, int dq);
+
+  /**
+   * Set up the DS1620 in CPU mode with 1-shot mode enabled.
+   */
   void config();
 
+  /**
+   * Get the current temperature reading in Celsius.
+   *
+   * Returns:
+   *   temperature in increments of 0.5C.
+   */
   float temp_c();
 
  private:
@@ -53,6 +71,11 @@ class DS1620
     nine_bits_
   };
 
+  /**
+   * Command constants.
+   *
+   * Many of these are supported by the DS1602, but are unused in this library.
+   */
   enum Command {
     read_temp_    = 0xAA,
     write_th_     = 0x01,
@@ -67,14 +90,44 @@ class DS1620
     read_config_  = 0xAC
   };
 
+  /**
+   * Sets the pin levels to prepare for reading and writing.
+   */
   void start_transfer();
+  /**
+   * Resets pin levels after communication.
+   */
   void end_transfer();
 
+  /**
+   * Trigger a temperature conversion in 1-shot mode, or enable continuous
+   * conversion.
+   */
   void start_conv();
+  /**
+   * Disable continuous conversion.
+   */
   void stop_conv();
 
+  /**
+   * Read data from the DS1602.
+   *
+   * start_transfer() must be called before using this function.
+   */
   word read_data(DataSize size);
+
+  /**
+   * Write data to the DS1602.
+   *
+   * start_transfer() must be called before using this function.
+   */
   void write_data(word data, DataSize size);
+
+  /**
+   * Higher-level functions used to write commands, possibly with arguments.
+   *
+   * start_transfer() does not need to be called before using this functions.
+   */
   void write_command(Command command);
   void write_command_8bit(Command command, byte value);
 };
