@@ -34,26 +34,27 @@ Ds1620::Ds1620(int rst, int clk, int dq)
 
 void Ds1620::config()
 {
-  // write configuration register in DS1620
+  // Write configuration register in DS1620.
   byte flags = FLAG_CPU | FLAG_1SHOT;
   write_command_8bit(write_config_, flags);
-  delay(200); //wait until the configuration register is written
+  delay(200);
 }
+
 
 void Ds1620::start_conv()
 {
-  // START_CONV
-  write_command(start_conv_); //start conversion
+  write_command(start_conv_);
 
   // Max conversion delay is 750ms according to the datasheet.
   delay(750);
 }
 
+
 void Ds1620::stop_conv()
 {
-  // STOP_CONV
-  write_command(stop_conv_); //stop conversion
+  write_command(stop_conv_);
 }
+
 
 void Ds1620::write_data(word data, const DataSize size)
 {
@@ -66,12 +67,14 @@ void Ds1620::write_data(word data, const DataSize size)
   }
 }
 
+
 void Ds1620::write_command(Command command)
 {
   start_transfer();
   write_data(command, eight_bits_);
   end_transfer();
 }
+
 
 void Ds1620::write_command_8bit(Command command, uint8_t value)
 {
@@ -81,15 +84,16 @@ void Ds1620::write_command_8bit(Command command, uint8_t value)
   end_transfer();
 }
 
+
 int Ds1620::read_data()
 {
-  //READ DATA
   start_transfer();
   write_data(read_temp_, eight_bits_);
   int raw_data = read_raw_data();
   end_transfer();
   return raw_data;
 }
+
 
 int Ds1620::read_raw_data(void)
 {
@@ -110,11 +114,13 @@ int Ds1620::read_raw_data(void)
   return(raw_data);
 }
 
+
 void Ds1620::start_transfer()
 {
   digitalWrite(clk_pin_, LOW);
   digitalWrite(rst_pin_, HIGH);
 }
+
 
 void Ds1620::end_transfer()
 {
