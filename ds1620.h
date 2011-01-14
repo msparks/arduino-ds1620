@@ -31,14 +31,13 @@ class Ds1620
     nine_bits_
   };
 
+  void start_transfer();
+  void end_transfer();
+
   int read_raw_data(void);
   void write_data(word data, const DataSize size);
   void write_command(uint8_t command);
   void write_command_8bit(uint8_t command, uint8_t value);
-  void clk_high(void);
-  void clk_low(void);
-  void rst_high(void);
-  void rst_low(void);
 };
 
 #endif

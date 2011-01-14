@@ -57,29 +57,26 @@ void Ds1620::write_data(word data, const DataSize size)
 
 void Ds1620::write_command(uint8_t command)
 {
-  clk_low();
-  rst_high();
+  start_transfer();
   write_data(command, eight_bits_);
-  rst_low();
+  end_transfer();
 }
 
 void Ds1620::write_command_8bit(uint8_t command, uint8_t value)
 {
-  clk_low();
-  rst_high();
+  start_transfer();
   write_data(command, eight_bits_);
   write_data(value, eight_bits_);
-  rst_low();
+  end_transfer();
 }
 
 int Ds1620::read_data()
 {
   //READ DATA
-  clk_low();
-  rst_high();
+  start_transfer();
   write_data(0xAA, eight_bits_);
   int raw_data = read_raw_data();
-  rst_low();
+  end_transfer();
   return raw_data;
 }
 
@@ -93,31 +90,22 @@ int Ds1620::read_raw_data(void)
   /* jam the dq lead high to use as input */
   for(n=0;n<9;n++)
   {
-     clk_low();
+     digitalWrite(clk_pin_, LOW);
      bit=(digitalRead(dq_pin_));
-     clk_high();
+     digitalWrite(clk_pin_, HIGH);
      raw_data = raw_data | (bit <<  n);
   }
   pinMode(dq_pin_, OUTPUT);
   return(raw_data);
 }
 
-void Ds1620::clk_high(void)
-{
-  digitalWrite(clk_pin_, HIGH);
-}
-
-void Ds1620::clk_low(void)
+void Ds1620::start_transfer()
 {
   digitalWrite(clk_pin_, LOW);
-}
-
-void Ds1620::rst_high(void)
-{
   digitalWrite(rst_pin_, HIGH);
 }
 
-void Ds1620::rst_low(void)
+void Ds1620::end_transfer()
 {
   digitalWrite(rst_pin_, LOW);
 }
