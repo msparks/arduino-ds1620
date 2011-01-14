@@ -31,6 +31,7 @@ Ds1620::Ds1620(int rst, int clk, int dq)
   pinMode(dq, OUTPUT);
 }
 
+
 void Ds1620::config()
 {
   // write configuration register in DS1620
@@ -39,12 +40,13 @@ void Ds1620::config()
   delay(200); //wait until the configuration register is written
 }
 
-
 void Ds1620::start_conv()
 {
   // START_CONV
   write_command(start_conv_); //start conversion
-  delay(700);
+
+  // Max conversion delay is 750ms according to the datasheet.
+  delay(750);
 }
 
 void Ds1620::stop_conv()
