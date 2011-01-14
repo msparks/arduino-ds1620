@@ -22,10 +22,12 @@ class Ds1620
   int read_data();
 
  private:
-  int rstPin, clkPin, dqPin;
+  const int rst_pin_;
+  const int clk_pin_;
+  const int dq_pin_;
+
   int read_raw_data(void);
   void write_command(int command);
-  void out_bit(int bit);
   void clk_high(void);
   void clk_low(void);
   void rst_high(void);

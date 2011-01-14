@@ -13,7 +13,10 @@
 #include "ds1620.h"
 
 
-Ds1620::Ds1620(int rst, int clk, int dq):rstPin(rst),clkPin(clk),dqPin(dq)
+Ds1620::Ds1620(int rst, int clk, int dq)
+    : rst_pin_(rst),
+      clk_pin_(clk),
+      dq_pin_(dq)
 {
   pinMode(rst, OUTPUT);
   pinMode(clk, OUTPUT);
@@ -57,13 +60,8 @@ void Ds1620::stop_conv()
 void Ds1620::write_command(int command)
 /* sends 8 bit command on DQ output, least sig bit first */
 {
-  int n, bit;
-
-  for(n=0;n<8;n++)
-  {
-    bit = ((command >> n) & (0x01));
-    out_bit(bit);
-  }
+  clk_low();
+  shiftOut(dq_pin_, clk_pin_, LSBFIRST, command);
 }
 
 int Ds1620::read_data()
@@ -82,43 +80,36 @@ int Ds1620::read_raw_data(void)
   int bit,n;
   int raw_data=0;
 
-  pinMode(dqPin,INPUT);
+  pinMode(dq_pin_, INPUT);
 
   /* jam the dq lead high to use as input */
   for(n=0;n<9;n++)
   {
      clk_low();
-     bit=(digitalRead(dqPin));
+     bit=(digitalRead(dq_pin_));
      clk_high();
      raw_data = raw_data | (bit <<  n);
   }
-  pinMode(dqPin, OUTPUT);
+  pinMode(dq_pin_, OUTPUT);
   return(raw_data);
-}
-
-void Ds1620::out_bit(int bit)
-{
-  digitalWrite(dqPin, bit);  /* set up the data */
-  clk_low();             /* and then provide a clock pulse */
-  clk_high();
 }
 
 void Ds1620::clk_high(void)
 {
-  digitalWrite(clkPin,HIGH);
+  digitalWrite(clk_pin_, HIGH);
 }
 
 void Ds1620::clk_low(void)
 {
-  digitalWrite(clkPin,LOW);
+  digitalWrite(clk_pin_, LOW);
 }
 
 void Ds1620::rst_high(void)
 {
-  digitalWrite(rstPin,HIGH);
+  digitalWrite(rst_pin_, HIGH);
 }
 
 void Ds1620::rst_low(void)
 {
-  digitalWrite(rstPin,LOW);
+  digitalWrite(rst_pin_, LOW);
 }
