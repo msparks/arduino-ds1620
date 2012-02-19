@@ -9,9 +9,10 @@ All rights reserved.
 
 
 // Set the appropriate digital I/O pin connections.
-static const uint8_t RST_PIN = 7;
-static const uint8_t CLK_PIN = 8;
-static const uint8_t DQ_PIN  = 9;
+// See the datasheet for more details.
+static const uint8_t RST_PIN = 7;  // pin 3 on DS1620
+static const uint8_t CLK_PIN = 8;  // pin 2 on DS1620
+static const uint8_t DQ_PIN  = 9;  // pin 1 on DS1620
 
 
 DS1620 ds1620(RST_PIN, CLK_PIN, DQ_PIN);
