@@ -42,22 +42,26 @@ float DS1620::temp_c()
   // Start temperature conversion.
   start_conv();
 
-  // Read temperature value, including 0.5C LSB.
   start_transfer();
   write_data(read_temp_, eight_bits_);
-  int temp_raw = read_data(nine_bits_);
+  const int temp_read = read_data(nine_bits_) >> 1;  // strip the LSB
   end_transfer();
 
-  // Stopping conversion is not necessary here while in 1-shot mode.
+  start_transfer();
+  write_data(read_cnt_, eight_bits_);
+  const int count_remain = read_data(nine_bits_);
+  end_transfer();
 
-  // Temperature is reported in 0.5C increments using the LSB.
-  byte half_c_bit = temp_raw & 0x01;
+  start_transfer();
+  write_data(read_slope_, eight_bits_);
+  const int count_per_c = read_data(nine_bits_);
+  end_transfer();
 
-  temp_raw = (int8_t)(temp_raw >> 1);  // trim LSB, cast to signed byte
-  float temp_c = temp_raw;
-  if (half_c_bit == 1)
-    temp_c += 0.5;
-
+  // High-resolution temperature calculation. See page 4 of the datasheet for
+  // details.
+  const float temp_c =
+      temp_read - 0.25 +
+      (count_per_c - count_remain) / static_cast<float>(count_per_c);
   return temp_c;
 }
 

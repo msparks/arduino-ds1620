@@ -29,7 +29,11 @@ void setup()
 
 void loop()
 {
-  float temp = ds1620.temp_c();
+  const float temp_c = ds1620.temp_c();
+  const float temp_f = temp_c * 9/5.0 + 32;
 
-  Serial.println(temp, 1);  // 1 decimal place
+  Serial.print(temp_f, 1);  // 1 decimal place
+  Serial.print("F ");
+  Serial.print(temp_c, 1);
+  Serial.println("C");
 }
