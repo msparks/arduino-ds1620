@@ -61,7 +61,7 @@ class DS1620
    * Get the current temperature reading in Celsius.
    *
    * Returns:
-   *   temperature in increments of 0.5C.
+   *   temperature in degrees Celcius.
    */
   float temp_c();
 
