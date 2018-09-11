@@ -25,22 +25,27 @@ DS1620::DS1620(const int rst, const int clk, const int dq)
 }
 
 
-void DS1620::config()
+void DS1620::config(bool oneShot)
 {
   // Write configuration register in DS1620.
-  byte flags = FLAG_CPU | FLAG_1SHOT;
+  byte flags = FLAG_CPU;
+  if (oneShot) {
+    flags |= FLAG_1SHOT;
+  }
   write_command_8bit(write_config_, flags);
 
   // E^2 memory has a small write delay. According to the datasheet, this is
   // around 10ms at room temperature.
-  delay(50);
+  delay(30);
 }
 
 
-float DS1620::temp_c()
+float DS1620::temp_c(bool start)
 {
-  // Start temperature conversion.
-  start_conv();
+  if (start) {
+    // Start temperature conversion.
+    start_conv();
+  }
 
   start_transfer();
   write_data(read_temp_, eight_bits_);
@@ -66,12 +71,14 @@ float DS1620::temp_c()
 }
 
 
-void DS1620::start_conv()
+void DS1620::start_conv(bool wait)
 {
   write_command(start_conv_);
 
-  // Max conversion delay is 750ms according to the datasheet.
-  delay(750);
+  if (wait) {
+    // Max conversion delay is 750ms according to the datasheet.
+    delay(750);
+  }
 }
 
 
