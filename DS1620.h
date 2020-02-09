@@ -53,9 +53,12 @@ class DS1620
   DS1620(int rst, int clk, int dq);
 
   /**
-   * Set up the DS1620 in CPU mode with 1-shot mode enabled.
+   * Set up the DS1620 in CPU mode.
+   *
+   * Args:
+   *   one_shot: Whether or not 1-shot mode should be enabled (non-continuous temp reading)
    */
-  void config();
+  void config(bool one_shot);
 
   /**
    * Get the current temperature reading in Celsius.
@@ -64,6 +67,22 @@ class DS1620
    *   temperature in degrees Celcius.
    */
   float temp_c();
+
+  /**
+   * Sets the TH register for the upper alarm trip point
+   *
+   * Args:
+   *   high: The high temperature alarm trip
+   */
+  void set_high_temp_c(float high);
+
+  /**
+   * Sets the TL register for the lower alarm trip point
+   *
+   * Args:
+   *   low: The low temperature alarm trip
+   */
+  void set_low_temp_c(float low);
 
  private:
   const int rst_pin_;
@@ -134,6 +153,7 @@ class DS1620
    */
   void write_command(Command command);
   void write_command_8bit(Command command, byte value);
+  void write_command_9bit(Command command, word value);
 };
 
 #endif

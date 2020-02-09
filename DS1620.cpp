@@ -25,10 +25,13 @@ DS1620::DS1620(const int rst, const int clk, const int dq)
 }
 
 
-void DS1620::config()
+void DS1620::config(bool one_shot)
 {
   // Write configuration register in DS1620.
-  byte flags = FLAG_CPU | FLAG_1SHOT;
+  byte flags = FLAG_CPU;
+  if (one_shot) {
+    flags |= FLAG_1SHOT;
+  }
   write_command_8bit(write_config_, flags);
 
   // E^2 memory has a small write delay. According to the datasheet, this is
@@ -65,6 +68,30 @@ float DS1620::temp_c()
   return temp_c;
 }
 
+void DS1620::set_high_temp_c(float high)
+{
+  // Temperatures are stored such that 1 LSB = 0.5deg C
+  // We need to write 9 bits, so store this in 16 bits
+  int16_t temp = static_cast<int16_t>(high * 2.0);
+  Serial.println(temp, BIN);
+
+  write_command_9bit(write_th_, temp);
+  // E^2 memory has a small write delay. According to the datasheet, this is
+  // around 10ms at room temperature.
+  delay(50);
+}
+
+void DS1620::set_low_temp_c(float low)
+{
+  // Temperatures are stored such that 1 LSB = 0.5deg C
+  // We need to write 9 bits, so store this in 16 bits
+  int16_t temp = static_cast<int16_t>(low * 2.0);
+
+  write_command_9bit(write_tl_, temp);
+  // E^2 memory has a small write delay. According to the datasheet, this is
+  // around 10ms at room temperature.
+  delay(50);
+}
 
 void DS1620::start_conv()
 {
@@ -130,6 +157,12 @@ void DS1620::write_command_8bit(const Command command, const byte value)
   end_transfer();
 }
 
+void DS1620::write_command_9bit(const Command command, const word value) {
+  start_transfer();
+  write_data(command, eight_bits_);
+  write_data(value, nine_bits_);
+  end_transfer();
+}
 
 void DS1620::start_transfer()
 {
